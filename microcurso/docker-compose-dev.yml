@@ -1,0 +1,29 @@
+services:
+  vault:
+    image: hashicorp/vault
+    ports:
+      - "8200:8200"
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: 00000000-0000-0000-0000-000000000000
+    volumes:
+      - ./vault/logs:/vault/logs
+      - ./vault/data:/vault/data
+
+  rabbitmq:
+    image: rabbitmq:3.11-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:25.0.2
+    command: ['start-dev', '--debug', '--import-realm', '--features=organization']
+    ports:
+      - "8060:8080"
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
